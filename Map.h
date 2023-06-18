@@ -9,6 +9,7 @@
 class Map {
 private:
     std::vector<std::vector<char>> grid;
+    std::vector<std::vector<char>> carGrid;
     int width;
     int height;
     SDL_Renderer* renderer;
@@ -18,7 +19,7 @@ private:
     bool state = false;
 
 public:
-    Map(const char** layout, int layoutWidth, int layoutHeight, SDL_Renderer* sdlRenderer);
+    Map(const char** layout, const char** layoutWithCars, int layoutWidth, int layoutHeight, SDL_Renderer* sdlRenderer);
 
     bool isCar(char cell){ return cell == '>' or cell == '<' or cell == '^' or cell == 'v';}
 

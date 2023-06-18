@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 
-Map::Map(const char** layout, int layoutWidth, int layoutHeight, SDL_Renderer* sdlRenderer) {
+Map::Map(const char** layout,const char** layoutWithCars,  int layoutWidth, int layoutHeight, SDL_Renderer* sdlRenderer) {
     width = layoutWidth;
     height = layoutHeight;
     renderer = sdlRenderer;
@@ -14,12 +14,15 @@ Map::Map(const char** layout, int layoutWidth, int layoutHeight, SDL_Renderer* s
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             grid[i][j] = layout[i][j];
+            // if (isCar(layoutWithCars[i][j])) {
+            //     carGrid[i][j] = layoutWithCars[i][j];
+            // }
         }
     }
 }
 
-Car setCarDir(SDL_Renderer* renderer, char cell, SDL_Rect rect, int i, int j){
-    Car car = Car(renderer, rect.x, rect.y, rect.w, rect.h, 1, i, j);
+Car setCarDir(SDL_Renderer* renderer, char cell, SDL_Rect rect){
+    Car car = Car(renderer, rect.x, rect.y, rect.w, rect.h, 1);
     switch (cell)
     {
     case '>':
@@ -44,8 +47,8 @@ Car setCarDir(SDL_Renderer* renderer, char cell, SDL_Rect rect, int i, int j){
     return car;
 }
 
-void createCar(SDL_Renderer* renderer, char cell, SDL_Rect rect, std::vector<Car>& cars, int i, int j){
-    Car car = setCarDir(renderer, cell, rect, i, j);
+void createCar(SDL_Renderer* renderer, char cell, SDL_Rect rect, std::vector<Car>& cars){
+    Car car = setCarDir(renderer, cell, rect);
     cars.push_back(car);
 }
 
@@ -85,10 +88,6 @@ void Map::Init() {
             if (cell == '|' or cell == '-' or cell == 'x') {
                 createRoad(renderer, rect, roads);
             } 
-            else if (isCar(cell)) {
-                createCar(renderer, cell, rect, cars, i, j);
-                createRoad(renderer, rect, roads);
-            }            
             else if (isTrafficLight(cell)) {
                 createTrafficLight(renderer, cell, rect, trafficLights);   
             } 
@@ -97,6 +96,23 @@ void Map::Init() {
             SDL_RenderFillRect(renderer, &rect);
         }
     }
+
+    // for (int i = 0; i < height; i++) {
+    //     for (int j = 0; j < width; j++) {
+    //         SDL_Rect rect;
+    //         rect.x = j * cellWidth;
+    //         rect.y = i * cellHeight;
+    //         rect.w = cellWidth;
+    //         rect.h = cellHeight;
+    //         char cell = carGrid[i][j];
+
+    //         if (isCar(cell)) {
+    //             createCar(renderer, cell, rect, cars);
+    //             SDL_RenderFillRect(renderer, &rect);
+    //         } 
+
+    //     }
+    // }
     
 }
 
@@ -108,15 +124,9 @@ void Map::Render() {
     for (int i = 0; i < roads.size(); i++) {
         roads[i].Render();
     }
-    for (int i = 0; i < cars.size(); i++) {
-        int grid_i = cars[i].GetX()/WINDOW_HEIGHT;
-        int grid_j = cars[i].GetY()/WINDOW_WIDTH;
-        if (grid[grid_i][grid_j] == 'x') {
-            cars[i].onCrossroad(grid_i, height, grid_j, width);
-        }
-        cars[i].Update(this->state);
-        cars[i].Render();
-    }
+    // for (int i = 0; i < cars.size(); i++) {
+    //     cars[i].Render();
+    // }
 }
 
 void Map::changeLights(){

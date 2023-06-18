@@ -9,7 +9,7 @@ public:
     enum Direction {up,down,left,right};
 
 
-    Car(SDL_Renderer* renderer, int x, int y, int width, int height, int speed, int i, int j);
+    Car(SDL_Renderer* renderer, int x, int y, int width, int height, int speed);
     void Update(bool mapState);
     void Render();
     void SetDirection(Direction direction) { this->direction = direction; }

@@ -15,10 +15,21 @@ int main() {
 
     const char* layout[] = {
         "........*.......",
-        "x-<----x-------x",
+        "x------x-------x",
         "|.....*|:......|",
         "|......|.......|",
-        "|......^.......|",
+        "|......|.......|",
+        "|.....:|*......|",
+        "x------x-------x",
+        ".....*.........."
+    };
+
+    const char* layoutWithCars[] = {
+        "........*.......",
+        "x--<---x-------x",
+        "|.....*|:......|",
+        "|......|.......|",
+        "|......|.......|",
         "|.....:|*......|",
         "x------x->-----x",
         ".....*.........."
@@ -28,7 +39,7 @@ int main() {
     int layoutHeight = sizeof(layout) / sizeof(layout[0]);
 
     // Create a map
-    Map map(layout, layoutWidth, layoutHeight, renderer);
+    Map map(layout, layoutWithCars, layoutWidth, layoutHeight, renderer);
 
     map.Init();
 
