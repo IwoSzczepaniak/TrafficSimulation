@@ -27,6 +27,4 @@ public:
     void Render();
 
     void changeLights();
-
-    bool onCrossroad(int x, int y);
 };

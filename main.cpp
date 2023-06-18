@@ -14,14 +14,14 @@ int main() {
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 
     const char* layout[] = {
-        "......*.....",
-        "x-<--x-----x",
-        "|...*|:....|",
-        "|....|.....|",
-        "|....|.....|",
-        "|...:|*....|",
-        "x----x->---x",
-        "...*........"
+        "........*.......",
+        "x-<----x-------x",
+        "|.....*|:......|",
+        "|......|.......|",
+        "|......^.......|",
+        "|.....:|*......|",
+        "x------x->-----x",
+        ".....*.........."
     };
 
     int layoutWidth = strlen(layout[0]);
@@ -37,7 +37,7 @@ int main() {
     bool running = true;
     Uint32 lastTime = SDL_GetTicks();
     Uint32 elapsedTime = 0;
-    Uint32 lightChangeInterval = 2000;  // Change the light every 3 seconds
+    Uint32 lightChangeInterval = 2000;  // Change the light every 2 seconds
 
 
     while (running) {

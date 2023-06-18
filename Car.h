@@ -9,12 +9,15 @@ public:
     enum Direction {up,down,left,right};
 
 
-    Car(SDL_Renderer* renderer, int x, int y, int width, int height, int speed);
-    void Update(int state);
+    Car(SDL_Renderer* renderer, int x, int y, int width, int height, int speed, int i, int j);
+    void Update(bool mapState);
     void Render();
-    void SetOnCrossroad(bool onCrossroad) { this->onCrossroad = onCrossroad; }
     void SetDirection(Direction direction) { this->direction = direction; }
     void SetSpeed(int speed) { this->speed = speed; }
+    int GetX() { return x; }
+    int GetY() { return y; }
+
+    void onCrossroad(int i, int height, int j, int width);
 
 private:
     SDL_Renderer* renderer;
@@ -22,7 +25,6 @@ private:
     int speed;
     int roadWidth,roadHeight;
     Direction direction;
-    bool onCrossroad;
 };
 
 #endif
