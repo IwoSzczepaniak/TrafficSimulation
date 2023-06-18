@@ -1,9 +1,9 @@
 #include "TrafficLight.h"
 #include <SDL2/SDL_image.h>
 
+// TO DO
 TrafficLight::TrafficLight(SDL_Renderer* renderer, int x, int y, int size)
-    : renderer(renderer), x(x), y(y), size(size), state(TrafficLightState::Red) {
-    // Load the traffic light images
+    : renderer(renderer), x(x), y(y), size(size/2), state(TrafficLightState::Red) {
     redTexture = LoadTexture("resources/red.png");
     greenTexture = LoadTexture("resources/green.png");
 }
@@ -11,6 +11,8 @@ TrafficLight::TrafficLight(SDL_Renderer* renderer, int x, int y, int size)
 void TrafficLight::SetState(TrafficLightState newState) {
     state = newState;
 }
+
+
 
 TrafficLight::TrafficLightState TrafficLight::GetState() {
     return state;
