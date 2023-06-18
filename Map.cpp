@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 
-Map::Map(const char** layout,const char** layoutWithCars,  int layoutWidth, int layoutHeight, SDL_Renderer* sdlRenderer) {
+Map::Map(const char** layout,  int layoutWidth, int layoutHeight, SDL_Renderer* sdlRenderer) {
     width = layoutWidth;
     height = layoutHeight;
     renderer = sdlRenderer;
@@ -14,9 +14,6 @@ Map::Map(const char** layout,const char** layoutWithCars,  int layoutWidth, int 
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             grid[i][j] = layout[i][j];
-            // if (isCar(layoutWithCars[i][j])) {
-            //     carGrid[i][j] = layoutWithCars[i][j];
-            // }
         }
     }
 }
@@ -96,23 +93,6 @@ void Map::Init() {
             SDL_RenderFillRect(renderer, &rect);
         }
     }
-
-    // for (int i = 0; i < height; i++) {
-    //     for (int j = 0; j < width; j++) {
-    //         SDL_Rect rect;
-    //         rect.x = j * cellWidth;
-    //         rect.y = i * cellHeight;
-    //         rect.w = cellWidth;
-    //         rect.h = cellHeight;
-    //         char cell = carGrid[i][j];
-
-    //         if (isCar(cell)) {
-    //             createCar(renderer, cell, rect, cars);
-    //             SDL_RenderFillRect(renderer, &rect);
-    //         } 
-
-    //     }
-    // }
     
 }
 

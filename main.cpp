@@ -24,22 +24,12 @@ int main() {
         ".....*.........."
     };
 
-    const char* layoutWithCars[] = {
-        "........*.......",
-        "x--<---x-------x",
-        "|.....*|:......|",
-        "|......|.......|",
-        "|......|.......|",
-        "|.....:|*......|",
-        "x------x->-----x",
-        ".....*.........."
-    };
 
     int layoutWidth = strlen(layout[0]);
     int layoutHeight = sizeof(layout) / sizeof(layout[0]);
 
     // Create a map
-    Map map(layout, layoutWithCars, layoutWidth, layoutHeight, renderer);
+    Map map(layout, layoutWidth, layoutHeight, renderer);
 
     map.Init();
 
@@ -64,15 +54,14 @@ int main() {
         elapsedTime += currentTime - lastTime;
         lastTime = currentTime;
 
+        // Clear the renderer
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_RenderClear(renderer);
+
         if (elapsedTime >= lightChangeInterval) {
             elapsedTime = 0;
             map.changeLights();
         }
-
-
-        // Clear the renderer
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        SDL_RenderClear(renderer);
 
         // Render the map
         map.Render();
