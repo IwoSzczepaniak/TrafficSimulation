@@ -2,7 +2,7 @@
 
 #include "Car.h"
 
-Car::Car(SDL_Renderer* renderer, int x, int y, int width, int height, int speed, std::vector<std::vector<char>> grid,
+Car::Car(SDL_Renderer* renderer, int x, int y, int width, int height, int speed,
     int layoutWidth, int layoutHeight){
     this->renderer = renderer;
     this->x = x;
@@ -10,7 +10,6 @@ Car::Car(SDL_Renderer* renderer, int x, int y, int width, int height, int speed,
     this->width = width;
     this->height = height;
     this->speed = rand() % 3 + 1;
-    this->grid = grid;
     this->layoutWidth = layoutWidth;
     this->layoutHeight = layoutHeight;
 
@@ -58,58 +57,39 @@ void Car::Move(int state) {
 }
 
 
-void Car::DecideDirection() {
-    int i = y / height;
-    int j = x / width;
-
-    // Get the available directions at the crossroad based on the road layout
-    bool canGoUp = (i > 0 && (grid[i - 1][j] == '|' || grid[i - 1][j] == 'x'));
-    bool canGoDown = (i < layoutHeight - 1 && (grid[i + 1][j] == '|' || grid[i + 1][j] == 'x'));
-    bool canGoLeft = (j > 0 && (grid[i][j - 1] == '-' || grid[i][j - 1] == 'x'));
-    bool canGoRight = (j < layoutWidth - 1 && (grid[i][j + 1] == '-' || grid[i][j + 1] == 'x'));
+void Car::DecideDirection(bool canGoUp, bool canGoDown, bool canGoLeft, bool canGoRight, bool isX) {
 
     // Randomly choose a new direction that the car can go
     std::vector<Direction> possibleDirections;
     possibleDirections.clear();
-    if (canGoUp) {
+    if (canGoUp and rand()%2 == 0) {
         if(direction != down) possibleDirections.push_back(Direction::up);
     }
-    if (canGoDown) {
+    if (canGoDown and rand()%2 == 0 ) {
         if (direction != up) possibleDirections.push_back(Direction::down);
     }
-    if (canGoLeft) {
+    if (canGoLeft and rand()%2 == 0) {
         if(direction != right) possibleDirections.push_back(Direction::left);
     }
-    if (canGoRight) {
+    if (canGoRight and rand()%2 == 0) {
         if(direction != left) possibleDirections.push_back(Direction::right);
     }
 
-    if(grid[i][j] == 'x') {
-        if(direction == up){
-            for(int i=0; i<4; i++){
-                if(canGoLeft) possibleDirections.push_back(Direction::left);
-                if(canGoRight) possibleDirections.push_back(Direction::right);
-            }
-        }
-        else if(direction == down){
-            for(int i=0; i<4; i++){
-                if(canGoLeft) possibleDirections.push_back(Direction::left);
-                if(canGoRight) possibleDirections.push_back(Direction::right);
-            }
-        }
-        else if(direction == left){
-            for(int i=0; i<4; i++){
-                if(canGoUp) possibleDirections.push_back(Direction::up);
-                if(canGoDown) possibleDirections.push_back(Direction::down);
-            }
-        }
-        else if(direction == right){
-            for(int i=0; i<4; i++){
-                if(canGoUp) possibleDirections.push_back(Direction::up);
-                if(canGoDown) possibleDirections.push_back(Direction::down);
-            }
-        }
-    }
+    // if(isX) {
+    //     if (direction == up) {
+    //         if (canGoLeft && rand()%2 == 0) possibleDirections.push_back(Direction::left);
+    //         if (canGoRight && rand()%2 == 0) possibleDirections.push_back(Direction::right);
+    //     } else if (direction == down) {
+    //         if (canGoLeft && rand()%2 == 0) possibleDirections.push_back(Direction::left);
+    //         if (canGoRight && rand()%2 == 0) possibleDirections.push_back(Direction::right);
+    //     } else if (direction == left) {
+    //         if (canGoUp && rand()%2 == 0) possibleDirections.push_back(Direction::up);
+    //         if (canGoDown && rand()%2 == 0) possibleDirections.push_back(Direction::down);
+    //     } else if (direction == right) {
+    //         if (canGoUp && rand()%2 == 0) possibleDirections.push_back(Direction::up);
+    //         if (canGoDown && rand()%2 == 0) possibleDirections.push_back(Direction::down);
+    //     }
+    // }
 
     if (!possibleDirections.empty()) {
         // Choose a random direction from the available directions

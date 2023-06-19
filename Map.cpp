@@ -20,7 +20,7 @@ Map::Map(const char** layout,  int layoutWidth, int layoutHeight, SDL_Renderer* 
 }
 
 void Map::CreateCar(SDL_Renderer* renderer, SDL_Rect rect){
-    Car car = Car(renderer, rect.x, rect.y, rect.w, rect.h, 1, grid, layoutWidth, layoutHeight);
+    Car car = Car(renderer, rect.x, rect.y, rect.w, rect.h, 1, layoutWidth, layoutHeight);
     cars.push_back(car);
 }
 
@@ -105,7 +105,22 @@ void Map::Render() {
     for (int i = 0; i < cars.size(); i++) {
         cars[i].Render();
         cars[i].Move(state);
-        cars[i].DecideDirection();
+
+        int xi = cars[i].GetX();
+        int yi = cars[i].GetY();
+
+        int grid_i = yi/cellHeight;
+        int grid_j = xi/cellWidth;
+
+        bool canGoUp = (grid_i > 0 && (grid[grid_i - 1][grid_j] == '|' || grid[grid_i - 1][grid_j] == 'x'));
+        bool canGoDown = (grid_i < layoutHeight - 1 && (grid[grid_i + 1][grid_j] == '|' || grid[grid_i + 1][grid_j] == 'x'));
+        bool canGoLeft = (grid_j > 0 && (grid[grid_i][grid_j - 1] == '-' || grid[grid_i][grid_j - 1] == 'x'));
+        bool canGoRight = (grid_j < layoutWidth - 1 && (grid[grid_i][grid_j + 1] == '-' || grid[grid_i][grid_j + 1] == 'x'));
+
+        bool isX = (grid[grid_i][grid_j] == 'x');
+
+
+        cars[i].DecideDirection(canGoUp, canGoDown, canGoLeft, canGoRight, isX);
     }
 }
 

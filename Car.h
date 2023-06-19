@@ -11,10 +11,10 @@ public:
     enum Direction {up,down,left,right};
 
 
-    Car(SDL_Renderer* renderer, int x, int y, int width, int height, int speed, std::vector<std::vector<char>> grid,
+    Car(SDL_Renderer* renderer, int x, int y, int width, int height, int speed,
     int layoutWidth, int layoutHeight);
     void Move(int state);
-    void DecideDirection();
+    void DecideDirection(bool canGoUp, bool canGoDown, bool canGoLeft, bool canGoRight, bool isX);
 
     void Render();
 
