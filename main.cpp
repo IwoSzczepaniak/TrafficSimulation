@@ -19,37 +19,39 @@ int main() {
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 
     const char* layout[] = {
-        ".......*...*.........",
-        ".xx--------------xxx.",
-        ".xx------x-------xxx.",
+        ".....*......*........",
+        ".x----------------xx.",
+        ".|x------x-------xxx.",
+        ".||.....:x:......|x|.",
+        ".|x.....:|:......|||.",
+        ".|x..*..:x:..*...|x|.",
+        ".xx------x-x-----xxx.",
+        ".xx----x-x-------xxx.",
+        ".xx------x-x-----xxx.",
+        ".|x..*..:x:..*...|||.",
         ".||.....:|:......|||.",
-        ":||..*..:|:..*...|||:",
-        ".xx------xxxxxxxx|x|.",
-        ".xxxxxxxxx-------x-x.",
-        ".xx------xxxxxxxx|x|.",
-        ":||..*..:|:..*...|||:",
-        ".||.....:|:......|||.",
-        ".xx------x-------xxx.",
-        ".xx--------------xxx.",
-        ".......*...*........."
+        ".||.....:x:......|x|.",
+        ".|x------x-------xxx.",
+        ".x----------------xx.",
+        ".....*......*........"
     };
-    int carAmount = 25;
+    int carAmount = 50;
+    int carSpeed = 2;
 
 
     int layoutWidth = strlen(layout[0]);
     int layoutHeight = sizeof(layout) / sizeof(layout[0]);
 
     // Create a map
-    Map map(layout, layoutWidth, layoutHeight, renderer, carAmount);
+    Map *map = new Map(layout, layoutWidth, layoutHeight, renderer, carAmount);
 
-    map.Init();
-
+    map->Init(carSpeed);
 
     // Main loop
     bool running = true;
     Uint32 lastTime = SDL_GetTicks();
     Uint32 elapsedTime = 0;
-    Uint32 lightChangeInterval = 2000;  // Change the light every 2 seconds
+    Uint32 lightChangeInterval = 3000;  // Change the light every 3 seconds
 
 
     while (running) {
@@ -71,11 +73,11 @@ int main() {
 
         if (elapsedTime >= lightChangeInterval) {
             elapsedTime = 0;
-            map.changeLights();
+            map->changeLights();
         }
 
         // Render the map
-        map.Render();
+        map->Render();
 
         // Present the renderer
         SDL_RenderPresent(renderer);

@@ -3,6 +3,7 @@
 #include "common.h"
 
 #include <stdio.h>
+#include <thread>
 
 
 Map::Map(const char** layout,  int layoutWidth, int layoutHeight, SDL_Renderer* sdlRenderer, int carAmount) {
@@ -19,13 +20,19 @@ Map::Map(const char** layout,  int layoutWidth, int layoutHeight, SDL_Renderer* 
     }
 }
 
-void Map::CreateCar(SDL_Renderer* renderer, SDL_Rect rect){
-    Car car = Car(renderer, rect.x, rect.y, rect.w, rect.h, 1, layoutWidth, layoutHeight);
+Map::~Map(){
+    for (auto car:cars) delete car;
+    for (auto road:roads) delete road;
+    for (auto trafficLight:trafficLights) delete trafficLight;
+}
+
+void Map::CreateCar(SDL_Rect rect, int speed){
+    Car *car = new Car(renderer, rect.x, rect.y, rect.w, rect.h, speed, layoutWidth, layoutHeight);
     cars.push_back(car);
 }
 
-void Map::CreateRoad(SDL_Renderer* renderer, SDL_Rect rect){
-    Road road = Road(renderer, rect.x, rect.y, rect.w, rect.h);
+void Map::CreateRoad(SDL_Rect rect){
+    Road *road = new Road(renderer, rect.x, rect.y, rect.w, rect.h);
     roads.push_back(road);
 }
 
@@ -33,25 +40,25 @@ bool IsTrafficLight(char cell){
     return cell == '*' or cell == ':';
 }
 
-void Map::CreateTrafficLight(SDL_Renderer* renderer, char cell, SDL_Rect rect){
-    TrafficLight trafficLight = TrafficLight(renderer, rect.x, rect.y, rect.h);
+void Map::CreateTrafficLight(char cell, SDL_Rect rect){
+    TrafficLight* trafficLight = new TrafficLight(renderer, rect.x, rect.y, rect.h);
     if (cell == '*') {
-        trafficLight.SetState(TrafficLight::TrafficLightState::Green);
+        trafficLight->SetState(TrafficLight::TrafficLightState::Green);
     } else if (cell == ':') {
-        trafficLight.SetState(TrafficLight::TrafficLightState::Red);
+        trafficLight->SetState(TrafficLight::TrafficLightState::Red);
     }
     trafficLights.push_back(trafficLight);
 }
 
 void Map::changeLights(){
     for (int i = 0; i < trafficLights.size(); i++) {
-        trafficLights[i].changeLights();
+        trafficLights[i]->changeLights();
     }
     state++;
     state %= 2;
 }
 
-void Map::Init()
+void Map::Init(int carSpeed)
 {
     cellWidth = WINDOW_WIDTH/layoutWidth ;
     cellHeight = WINDOW_HEIGHT/layoutHeight;
@@ -67,10 +74,10 @@ void Map::Init()
             char cell = grid[i][j];
 
             if (cell == '|' or cell == '-' or cell == 'x') {
-                CreateRoad(renderer, rect);
+                CreateRoad(rect);
             } 
             else if (IsTrafficLight(cell)) {
-                CreateTrafficLight(renderer, cell, rect);   
+                CreateTrafficLight(cell, rect);   
             } 
             else SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
@@ -89,7 +96,7 @@ void Map::Init()
             rect.y = y * cellHeight;
             rect.w = cellWidth;
             rect.h = cellHeight;
-            CreateCar(renderer, rect);
+            CreateCar(rect, carSpeed);
             carAmount--;
         }
     }
@@ -97,17 +104,19 @@ void Map::Init()
 
 void Map::Render() {
     for (int i = 0; i < trafficLights.size(); i++) {
-        trafficLights[i].Render();
+        trafficLights[i]->Render();
     }
     for (int i = 0; i < roads.size(); i++) {
-        roads[i].Render();
+        roads[i]->Render();
     }
+    
     for (int i = 0; i < cars.size(); i++) {
-        cars[i].Render();
-        cars[i].Move(state);
+        cars[i]->Render();
+        cars[i]->Move(state);
+        
 
-        int xi = cars[i].GetX();
-        int yi = cars[i].GetY();
+        int xi = cars[i]->GetX();
+        int yi = cars[i]->GetY();
 
         int grid_i = yi/cellHeight;
         int grid_j = xi/cellWidth;
@@ -120,7 +129,7 @@ void Map::Render() {
         bool isX = (grid[grid_i][grid_j] == 'x');
 
 
-        cars[i].DecideDirection(canGoUp, canGoDown, canGoLeft, canGoRight, isX);
+        cars[i]->DecideDirection(canGoUp, canGoDown, canGoLeft, canGoRight, isX);
     }
 }
 

@@ -59,37 +59,33 @@ void Car::Move(int state) {
 
 void Car::DecideDirection(bool canGoUp, bool canGoDown, bool canGoLeft, bool canGoRight, bool isX) {
 
+    if(isX) {
+        // run from crossroad
+        for (int i = 0; i < 3; i++) {
+            Move(1);
+            Move(0);
+        }
+    }
+    
     // Randomly choose a new direction that the car can go
     std::vector<Direction> possibleDirections;
     possibleDirections.clear();
-    if (canGoUp and rand()%2 == 0) {
+
+
+    if (canGoUp ) {
         if(direction != down) possibleDirections.push_back(Direction::up);
     }
-    if (canGoDown and rand()%2 == 0 ) {
+    if (canGoDown  ) {
         if (direction != up) possibleDirections.push_back(Direction::down);
     }
-    if (canGoLeft and rand()%2 == 0) {
+    if (canGoLeft ) {
         if(direction != right) possibleDirections.push_back(Direction::left);
     }
-    if (canGoRight and rand()%2 == 0) {
+    if (canGoRight ) {
         if(direction != left) possibleDirections.push_back(Direction::right);
     }
 
-    // if(isX) {
-    //     if (direction == up) {
-    //         if (canGoLeft && rand()%2 == 0) possibleDirections.push_back(Direction::left);
-    //         if (canGoRight && rand()%2 == 0) possibleDirections.push_back(Direction::right);
-    //     } else if (direction == down) {
-    //         if (canGoLeft && rand()%2 == 0) possibleDirections.push_back(Direction::left);
-    //         if (canGoRight && rand()%2 == 0) possibleDirections.push_back(Direction::right);
-    //     } else if (direction == left) {
-    //         if (canGoUp && rand()%2 == 0) possibleDirections.push_back(Direction::up);
-    //         if (canGoDown && rand()%2 == 0) possibleDirections.push_back(Direction::down);
-    //     } else if (direction == right) {
-    //         if (canGoUp && rand()%2 == 0) possibleDirections.push_back(Direction::up);
-    //         if (canGoDown && rand()%2 == 0) possibleDirections.push_back(Direction::down);
-    //     }
-    // }
+    
 
     if (!possibleDirections.empty()) {
         // Choose a random direction from the available directions

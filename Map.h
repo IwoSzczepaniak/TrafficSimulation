@@ -13,9 +13,9 @@ private:
     int cellWidth, cellHeight;
     SDL_Renderer* renderer;
     SDL_Renderer* carRenderer;
-    std::vector<TrafficLight> trafficLights;
-    std::vector<Road> roads;
-    std::vector<Car> cars;
+    std::vector<TrafficLight*> trafficLights;
+    std::vector<Road*> roads;
+    std::vector<Car*> cars;
     int state = 1;
 
 public:
@@ -25,15 +25,17 @@ public:
 
     bool IsRoad(char cell){ return cell == '|' or cell == '-' or cell == 'x';}
 
-    void CreateCar(SDL_Renderer* renderer, SDL_Rect rect);
+    void CreateCar(SDL_Rect rect, int speed);
 
-    void CreateRoad(SDL_Renderer* renderer, SDL_Rect rect);
+    void CreateRoad(SDL_Rect rect);
 
-    void CreateTrafficLight(SDL_Renderer* renderer, char cell, SDL_Rect rect);
+    void CreateTrafficLight(char cell, SDL_Rect rect);
 
-    void Init();
+    void Init(int carSpeed);
 
     void Render();
 
     void changeLights();
+
+    ~Map();
 };
