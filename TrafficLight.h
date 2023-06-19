@@ -13,6 +13,7 @@ public:
     void Render();
     int GetX();
     int GetY();
+    void changeLights();
 
 private:
     SDL_Renderer* renderer;

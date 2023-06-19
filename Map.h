@@ -9,19 +9,27 @@
 class Map {
 private:
     std::vector<std::vector<char>> grid;
-    int width;
-    int height;
+    int layoutWidth, layoutHeight, carAmount;
+    int cellWidth, cellHeight;
     SDL_Renderer* renderer;
     SDL_Renderer* carRenderer;
     std::vector<TrafficLight> trafficLights;
     std::vector<Road> roads;
     std::vector<Car> cars;
-    bool state = false;
+    int state = 1;
 
 public:
-    Map(const char** layout, int layoutWidth, int layoutHeight, SDL_Renderer* sdlRenderer);
+    Map(const char** layout,  int layoutWidth, int layoutHeight, SDL_Renderer* sdlRenderer, int carAmount);
 
-    bool isCar(char cell){ return cell == '>' or cell == '<' or cell == '^' or cell == 'v';}
+    bool IsCar(char cell){ return cell == '>' or cell == '<' or cell == '^' or cell == 'v';}
+
+    bool IsRoad(char cell){ return cell == '|' or cell == '-' or cell == 'x';}
+
+    void CreateCar(SDL_Renderer* renderer, SDL_Rect rect);
+
+    void CreateRoad(SDL_Renderer* renderer, SDL_Rect rect);
+
+    void CreateTrafficLight(SDL_Renderer* renderer, char cell, SDL_Rect rect);
 
     void Init();
 

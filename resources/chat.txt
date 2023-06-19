@@ -1,0 +1,260 @@
+main.cpp:
+
+#include <SDL2/SDL.h>
+
+#include "Road.h"
+#include "TrafficLight.h"
+#include "Car.h"
+#include "Map.h"
+
+
+int main() {
+    SDL_Init(SDL_INIT_EVERYTHING);
+
+    // Create a window and renderer
+    SDL_Window* window = SDL_CreateWindow("Traffic Simulator", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+
+    const char* layout[] = {
+        ".........*........",
+        ".x------x-------x.",
+        ".|.....*|:......|.",
+        ".|......|.......|.",
+        ".|......|.......|.",
+        ".|.....:|*......|.",
+        ".x------x-------x.",
+        "......*..........."
+    };
+    int carsAmount = 3;
+
+
+    int layoutWidth = strlen(layout[0]);
+    int layoutHeight = sizeof(layout) / sizeof(layout[0]);
+
+    // Create a map
+    Map map(layout, layoutWidth, layoutHeight, renderer, carsAmount);
+
+    map.Init();
+
+
+    // Main loop
+    bool running = true;
+    Uint32 lastTime = SDL_GetTicks();
+    Uint32 elapsedTime = 0;
+    Uint32 lightChangeInterval = 2000;  // Change the light every 2 seconds
+
+
+    while (running) {
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                running = false;
+            }
+        }
+
+        // Update the simulation
+        Uint32 currentTime = SDL_GetTicks();
+        elapsedTime += currentTime - lastTime;
+        lastTime = currentTime;
+
+        // Clear the renderer
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_RenderClear(renderer);
+
+        if (elapsedTime >= lightChangeInterval) {
+            elapsedTime = 0;
+            map.changeLights();
+        }
+
+        // Render the map
+        map.Render();
+
+        // Present the renderer
+        SDL_RenderPresent(renderer);
+    }
+
+    // Cleanup and quit SDL
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+
+    return 0;
+}
+
+
+Map.h:
+#include <iostream>
+#include <vector>
+#include <SDL2/SDL.h>
+
+#include "TrafficLight.h"
+#include "Road.h"
+#include "Car.h"
+
+class Map {
+private:
+    std::vector<std::vector<char>> grid;
+    int width, height, carsAmount;
+    int cellWidth, cellHeight;
+    SDL_Renderer* renderer;
+    SDL_Renderer* carRenderer;
+    std::vector<TrafficLight> trafficLights;
+    std::vector<Road> roads;
+    std::vector<Car> cars;
+    bool state = false;
+
+public:
+    Map(const char** layout, int layoutWidth, int layoutHeight, SDL_Renderer* sdlRenderer, int carsAmount);
+
+    void Init();
+
+    void CarSpawn();
+
+    void Render();
+
+    void changeLights();
+};
+
+Map.cpp:
+
+#include <iostream>
+#include "Map.h"
+#include "common.h"
+
+#include <stdio.h>
+
+
+Map::Map(const char** layout,  int layoutWidth, int layoutHeight, SDL_Renderer* sdlRenderer, int carsAmount) {
+    width = layoutWidth;
+    height = layoutHeight;
+    renderer = sdlRenderer;
+    carsAmount = carsAmount;
+
+    cellWidth = WINDOW_WIDTH/width ;
+    cellHeight = WINDOW_HEIGHT/height;
+
+    grid.resize(height, std::vector<char>(width));
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            grid[i][j] = layout[i][j];
+        }
+    }
+}
+
+void createRoad(SDL_Renderer* renderer, SDL_Rect rect, std::vector<Road>& roads){
+    Road road = Road(renderer, rect.x, rect.y, rect.w, rect.h);
+    roads.push_back(road);
+}
+
+bool isTrafficLight(char cell){
+    return cell == '*' or cell == ':';
+}
+
+void createTrafficLight(SDL_Renderer* renderer, char cell, SDL_Rect rect, std::vector<TrafficLight>& trafficLights){
+    TrafficLight trafficLight = TrafficLight(renderer, rect.x, rect.y, rect.h);
+    if (cell == '*') {
+        trafficLight.SetState(TrafficLight::TrafficLightState::Green);
+    } else if (cell == ':') {
+        trafficLight.SetState(TrafficLight::TrafficLightState::Red);
+    }
+    trafficLights.push_back(trafficLight);
+}
+
+void Map::changeLights(){
+    for (int i = 0; i < trafficLights.size(); i++) {
+        if (trafficLights[i].GetState() == TrafficLight::TrafficLightState::Green) {
+            trafficLights[i].SetState(TrafficLight::TrafficLightState::Red);
+            this->state = false;
+        } else if (trafficLights[i].GetState() == TrafficLight::TrafficLightState::Red) {
+            trafficLights[i].SetState(TrafficLight::TrafficLightState::Green);
+            this->state = true;
+        }
+    }
+}
+
+void Map::CarSpawn(){
+
+    
+}
+
+void Map::Init() {
+    srand(time(NULL));
+
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            SDL_Rect rect;
+            rect.x = j * cellWidth;
+            rect.y = i * cellHeight;
+            rect.w = cellWidth;
+            rect.h = cellHeight;
+            char cell = grid[i][j];
+
+            if (cell == '|' or cell == '-' or cell == 'x') {
+                createRoad(renderer, rect, roads);
+            } 
+            else if (isTrafficLight(cell)) {
+                createTrafficLight(renderer, cell, rect, trafficLights);   
+            } 
+            else SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+
+            SDL_RenderFillRect(renderer, &rect);
+        }
+    }
+
+    CarSpawn();
+
+    
+}
+
+
+void Map::Render() {
+    for (int i = 0; i < trafficLights.size(); i++) {
+        trafficLights[i].Render();
+    }
+    for (int i = 0; i < roads.size(); i++) {
+        roads[i].Render();
+    }
+
+    for (int i = 0; i < cars.size(); i++) {
+        cars[i].Render();
+        cars[i].Move();
+    }
+}
+
+
+
+
+Car.h:
+
+#ifndef CAR_H
+#define CAR_H
+
+#include <SDL2/SDL.h>
+#include "TrafficLight.h"
+
+class Car {
+public:
+    enum Direction {up,down,left,right};
+
+    Car(SDL_Renderer* renderer, int x, int y, int width, int height, int speed);
+
+    void Render();
+
+    void Move();
+    void onCrossroad(int i, int height, int j, int width);
+
+    void SetDirection(Direction direction) { this->direction = direction; }
+    void SetSpeed(int speed) { this->speed = speed; }
+    int GetX() { return x; }
+    int GetY() { return y; }
+
+
+private:
+    SDL_Renderer* renderer;
+    int x, y, width, height;
+    int speed;
+    int roadWidth,roadHeight;
+    Direction direction;
+};
+
+#endif

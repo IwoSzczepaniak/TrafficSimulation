@@ -2,28 +2,34 @@
 #define CAR_H
 
 #include <SDL2/SDL.h>
-#include "TrafficLight.h"
+#include "common.h"
+#include <vector>
+
 
 class Car {
 public:
     enum Direction {up,down,left,right};
 
 
-    Car(SDL_Renderer* renderer, int x, int y, int width, int height, int speed);
-    void Update(bool mapState);
+    Car(SDL_Renderer* renderer, int x, int y, int width, int height, int speed, std::vector<std::vector<char>> grid,
+    int layoutWidth, int layoutHeight);
+    void Move(int state);
+    void DecideDirection();
+
     void Render();
+
     void SetDirection(Direction direction) { this->direction = direction; }
     void SetSpeed(int speed) { this->speed = speed; }
     int GetX() { return x; }
     int GetY() { return y; }
 
-    void onCrossroad(int i, int height, int j, int width);
 
 private:
     SDL_Renderer* renderer;
-    int x, y, width, height;
+    int x, y, width, height, layoutWidth, layoutHeight;
     int speed;
     int roadWidth,roadHeight;
+    std::vector<std::vector<char>> grid;
     Direction direction;
 };
 

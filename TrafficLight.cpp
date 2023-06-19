@@ -39,3 +39,11 @@ int TrafficLight::GetX() {
 int TrafficLight::GetY() {
     return y;
 }
+
+void TrafficLight::changeLights(){
+    if (state == TrafficLightState::Green) {
+        state = TrafficLightState::Red;
+    } else if (state == TrafficLightState::Red) {
+        state = TrafficLightState::Green;
+    }
+}

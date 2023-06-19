@@ -1,4 +1,6 @@
 #include <SDL2/SDL.h>
+#include <iostream>
+#include <vector>
 
 #include "Road.h"
 #include "TrafficLight.h"
@@ -14,22 +16,30 @@ int main() {
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 
     const char* layout[] = {
-        "........*.......",
-        "x------x-------x",
-        "|.....*|:......|",
-        "|......|.......|",
-        "|......|.......|",
-        "|.....:|*......|",
-        "x------x-------x",
-        ".....*.........."
+        ".......*...*........",
+        ".x-------x--------x.",
+        ".||------|-------||.",
+        ".||.....:|:......||.",
+        ".||......|.......||.",
+        ".||..*..:|:..*...||.",
+        ".|x------|-------||.",
+        ".x-------x--------x.",
+        ".|x------|-------||.",
+        ".||..*..:|:..*...||.",
+        ".||......|.......||.",
+        ".||.....:|:......||.",
+        ".|x------|-------|x.",
+        ".x-------x--------x.",
+        ".......*...*........"
     };
+    int carAmount = 25;
 
 
     int layoutWidth = strlen(layout[0]);
     int layoutHeight = sizeof(layout) / sizeof(layout[0]);
 
     // Create a map
-    Map map(layout, layoutWidth, layoutHeight, renderer);
+    Map map(layout, layoutWidth, layoutHeight, renderer, carAmount);
 
     map.Init();
 
