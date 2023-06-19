@@ -5,10 +5,11 @@
 #include <unistd.h>
 
 
-#include "Road.h"
-#include "TrafficLight.h"
-#include "Car.h"
-#include "Map.h"
+#include "classes/Road.h"
+#include "classes/TrafficLight.h"
+#include "classes/Car.h"
+#include "classes/Map.h"
+
 
 
 int main() {
@@ -19,21 +20,21 @@ int main() {
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 
     const char* layout[] = {
-        ".....*......*........",
-        ".x----------------xx.",
-        ".|x------x-------xxx.",
-        ".||.....:x:......|x|.",
-        ".|x.....:|:......|||.",
-        ".|x..*..:x:..*...|x|.",
-        ".xx------x-x-----xxx.",
-        ".xx----x-x-------xxx.",
-        ".xx------x-x-----xxx.",
-        ".|x..*..:x:..*...|||.",
-        ".||.....:|:......|||.",
-        ".||.....:x:......|x|.",
-        ".|x------x-------xxx.",
-        ".x----------------xx.",
-        ".....*......*........"
+        "......*......*........",
+        ".x------------------x.",
+        ".|xx------x-------xx|.",
+        ".|x|.....:x:......|x|.",
+        ":||x:.....|......:|||:",
+        ".||x..*..:x:..*...|x|.",
+        ".|xx------x-x-----xx|.",
+        ".|xx----x-x-------xx|.",
+        ".|xx------x-x-----xx|.",
+        ".|xx..*..:x:..*...|||.",
+        ":|||:.....|......:|||:",
+        ".|x|.....:x:......|x|.",
+        ".|xx------x-------xx|.",
+        ".x------------------x.",
+        "......*......*........"
     };
     int carAmount = 50;
     int carSpeed = 2;
@@ -51,7 +52,7 @@ int main() {
     bool running = true;
     Uint32 lastTime = SDL_GetTicks();
     Uint32 elapsedTime = 0;
-    Uint32 lightChangeInterval = 3000;  // Change the light every 3 seconds
+    Uint32 lightChangeInterval = carAmount*100;
 
 
     while (running) {

@@ -1,5 +1,11 @@
+FILES = classes/Road.cpp classes/TrafficLight.cpp classes/Car.cpp classes/Map.cpp
+OUTPUT = traffic_simulator
+GCC = g++
+CPPFLAGS = -Wall -g -std=c++11  -lSDL2 -lSDL2_image
+
 all:
-	g++ main.cpp Road.cpp TrafficLight.cpp Car.cpp Map.cpp -o traffic_simulator -lSDL2 -lSDL2_image
-	./traffic_simulator
+	$(GCC) main.cpp $(FILES) -o $(OUTPUT) $(CPPFLAGS)
+test:
+	./$(OUTPUT)
 clean:
-	rm traffic_simulator
+	rm $(OUTPUT)

@@ -61,7 +61,7 @@ void Car::DecideDirection(bool canGoUp, bool canGoDown, bool canGoLeft, bool can
 
     if(isX) {
         // run from crossroad
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 2; i++) {
             Move(1);
             Move(0);
         }

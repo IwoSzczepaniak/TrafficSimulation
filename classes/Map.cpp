@@ -1,10 +1,11 @@
 #include <iostream>
 #include "Map.h"
-#include "common.h"
 
 #include <stdio.h>
 #include <thread>
 
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
 
 Map::Map(const char** layout,  int layoutWidth, int layoutHeight, SDL_Renderer* sdlRenderer, int carAmount) {
     this->layoutWidth = layoutWidth;
@@ -51,7 +52,7 @@ void Map::CreateTrafficLight(char cell, SDL_Rect rect){
 }
 
 void Map::changeLights(){
-    for (int i = 0; i < trafficLights.size(); i++) {
+    for (int i = 0; i < (int)trafficLights.size(); i++) {
         trafficLights[i]->changeLights();
     }
     state++;
@@ -103,14 +104,14 @@ void Map::Init(int carSpeed)
 }
 
 void Map::Render() {
-    for (int i = 0; i < trafficLights.size(); i++) {
+    for (int i = 0; i < (int)trafficLights.size(); i++) {
         trafficLights[i]->Render();
     }
-    for (int i = 0; i < roads.size(); i++) {
+    for (int i = 0; i < (int)roads.size(); i++) {
         roads[i]->Render();
     }
     
-    for (int i = 0; i < cars.size(); i++) {
+    for (int i = 0; i < (int)cars.size(); i++) {
         cars[i]->Render();
         cars[i]->Move(state);
         
