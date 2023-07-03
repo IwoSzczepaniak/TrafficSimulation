@@ -85,7 +85,7 @@ int main() {
         map->Render();
 
         SDL_RenderPresent(renderer);
-        usleep(500);
+        usleep(2000);
     }
 
     // Cleanup and quit SDL
