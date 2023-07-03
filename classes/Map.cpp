@@ -55,8 +55,8 @@ void Map::changeLights(){
     for (int i = 0; i < (int)trafficLights.size(); i++) {
         trafficLights[i]->changeLights();
     }
-    state++;
-    state %= 2;
+    mapState++;
+    mapState %= 2;
 }
 
 void Map::Init(int carSpeed)
@@ -113,7 +113,7 @@ void Map::Render() {
     
     for (int i = 0; i < (int)cars.size(); i++) {
         cars[i]->Render();
-        cars[i]->Move(state);
+        cars[i]->Move(mapState);
         
 
         int xi = cars[i]->GetX();

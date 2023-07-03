@@ -16,7 +16,7 @@ private:
     std::vector<TrafficLight*> trafficLights;
     std::vector<Road*> roads;
     std::vector<Car*> cars;
-    int state = 1;
+    int mapState = 1;
 
 public:
     Map(const char** layout,  int layoutWidth, int layoutHeight, SDL_Renderer* sdlRenderer, int carAmount);
